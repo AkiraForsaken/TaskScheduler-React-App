@@ -19,16 +19,16 @@ await connectDB();
 const allowedOrigins = [
   'http://localhost:5173',
   'https://task-scheduler-akirasejis-projects.vercel.app',
-  'https://task-scheduler-akirasejis-projects.vercel.app/',
+  'https://task-scheduler-cyan-zeta.vercel.app'
 ];
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
+/* app.use(cors({
   origin: true,
   credentials: true,
-}));
-/* app.use(cors({
+})); */
+app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
@@ -39,7 +39,7 @@ app.use(cors({
     }
   },
   credentials: true,
-})); */
+}));
 
 app.get('/', (req, res) => res.send('API is working'));
 
