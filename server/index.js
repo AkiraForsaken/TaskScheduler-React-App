@@ -30,17 +30,19 @@ app.use(cookieParser());
 // }));
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1){
-      callback(null, true);
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      return callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
 }));
 // app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'))); 
 // process.cwd( is already server, so joining with )
-app.use('/uploads', cors(), express.static(path.join(process.cwd(), 'uploads')));
+// app.use('/uploads', cors(), express.static(path.join(process.cwd(), 'uploads')));
 // express app uses uploads foler 
 
 app.get('/', (req, res) => res.send('API is working'));
