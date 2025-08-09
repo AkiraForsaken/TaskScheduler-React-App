@@ -5,7 +5,8 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' 
-                            ? import.meta.env.VITE_BACKEND_URL
+                            // ? import.meta.env.VITE_BACKEND_URL
+                            ? "https://task-scheduler-backend.vercel.app"
                             : "http://localhost:5000";
 
 export const AppContext = createContext();
