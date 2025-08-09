@@ -17,7 +17,9 @@ const port = process.env.PORT || 5000;
 await connectDB();
 
 const allowedOrigins = [
-  'http://localhost:5173'
+  'http://localhost:5173',
+  'https://task-scheduler-akirasejis-projects.vercel.app',
+  'https://task-scheduler-akirasejis-projects.vercel.app/',
 ];
 
 app.use(express.json());

@@ -1,7 +1,6 @@
 import Task from '../models/Task.js'
 import User from '../models/User.js'
 import Notification from '../models/Notification.js'
-import multer from 'multer'
 import cloudinary from '../config/cloudinary.js'
 import fs from 'fs'
 // import path from 'path'
@@ -22,8 +21,6 @@ function getCloudinaryPublicId(url) {
         return null;
     }
 }
-
-const upload = multer({dest: 'uploads/'});
 
 // Add tasks for students: /api/tasks/add
 export const addTask = async (req, res)=>{
