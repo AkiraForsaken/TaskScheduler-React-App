@@ -52,8 +52,10 @@ export const googleLogin = async (req, res) => {
         // Set the token as a httpOnly cookie from the backend, which the isAuth call can read, verify and return for automatic login
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            // secure: process.env.NODE_ENV === 'production',
+            // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            secure: true,
+            sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         })
         res.json({success: true , user, message: "Login success"})
