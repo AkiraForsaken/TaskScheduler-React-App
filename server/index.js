@@ -24,11 +24,11 @@ const allowedOrigins = [
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use(cors({
-//   origin: allowedOrigins,
-//   credentials: true,
-// }));
 app.use(cors({
+  origin: true,
+  credentials: true,
+}));
+/* app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
@@ -39,11 +39,7 @@ app.use(cors({
     }
   },
   credentials: true,
-}));
-// app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'))); 
-// process.cwd( is already server, so joining with )
-// app.use('/uploads', cors(), express.static(path.join(process.cwd(), 'uploads')));
-// express app uses uploads foler 
+})); */
 
 app.get('/', (req, res) => res.send('API is working'));
 
