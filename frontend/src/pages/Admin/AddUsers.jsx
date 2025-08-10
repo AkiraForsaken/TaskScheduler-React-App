@@ -30,12 +30,10 @@ const AddUsers = () => {
     role: Yup.string()
       .oneOf(roles, 'Please select a valid role')
       .required('Role is required'),
-    phoneNumber: Yup.string()
-      .matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number')
-      .nullable(),
-    birthDate: Yup.date()
-      .max(new Date(), 'Birth date cannot be in the future')
-      .nullable()
+    phoneNumber: Yup.string().nullable()
+      .matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
+    birthDate: Yup.date().nullable()
+      .max(new Date(), 'Birth date cannot be in the future'),
   });
 
   const validateForm = async () => {

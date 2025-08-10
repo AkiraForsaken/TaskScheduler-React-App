@@ -49,13 +49,12 @@ export const googleLogin = async (req, res) => {
         )
 
         // res.json({success: true , token, user, message: "Login success"})
-        // Set the token as a httpOnly cookie from the backend, which the isAuth call can read, verify and return for automatic login
+        // Set the token as a httpOnly cookie from the backend, which the isAuth call can read, verify and return for automatic login 
+        // (this will be blocked if deployed frontend and backend separately)
         res.cookie('token', token, {
             httpOnly: true,
-            // secure: process.env.NODE_ENV === 'production',
-            // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            secure: true,
-            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         })
         res.json({success: true , user, message: "Login success"})
