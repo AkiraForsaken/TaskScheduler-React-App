@@ -30,10 +30,28 @@ const AddUsers = () => {
     role: Yup.string()
       .oneOf(roles, 'Please select a valid role')
       .required('Role is required'),
-    phoneNumber: Yup.string().nullable()
-      .matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
-    birthDate: Yup.date().nullable()
-      .max(new Date(), 'Birth date cannot be in the future'),
+    phoneNumber: Yup.string()
+      .nullable()
+      .transform((val, originalVal) => (originalVal === '' ? null : val))
+      .when('phoneNumber', {
+        is: (v) => v != null && v !== '',
+        then: (schema) =>
+          schema.matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
+        otherwise: (schema) => schema, // allow null/empty without error
+      }),
+      // .matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
+    birthDate: Yup.date()
+      .nullable()
+      .transform((val, originalVal) => (originalVal === '' ? null : val))
+      .when('birthDate', {
+        is: (v) => v != null && v !== '',
+        then: (schema) =>
+          schema
+            .typeError('Please enter a valid date')
+            .max(new Date(), 'Birth date cannot be in the future'),
+        otherwise: (schema) => schema, // allow null/empty without error
+      }),
+      // .max(new Date(), 'Birth date cannot be in the future'),
   });
 
   const validateForm = async () => {
@@ -133,7 +151,7 @@ const AddUsers = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target || null;
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -182,7 +200,7 @@ const AddUsers = () => {
             <TextField
               label='Phone Number'
               name="phoneNumber"
-              value={formData.phoneNumber}
+              value={formData.phoneNumber ?? ''}
               onChange={handleChange}
               fullWidth
               margin='normal'
@@ -192,7 +210,7 @@ const AddUsers = () => {
             <TextField
               label='Birth Date'
               name="birthDate"
-              value={formData.birthDate}
+              value={formData.birthDate ?? ''}
               onChange={handleChange}
               fullWidth
               margin='normal'
