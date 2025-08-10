@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { IconButton, Badge, Menu, MenuItem, Typography, Box, Divider, Button, List, ListItem, ListItemText 
-} from '@mui/material';
+import { useState } from 'react';
+import { IconButton, Badge, Menu, MenuItem, Typography, Box, Button, List, ListItem } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useAppContext } from '../context/AppContext';
 import toast from 'react-hot-toast';

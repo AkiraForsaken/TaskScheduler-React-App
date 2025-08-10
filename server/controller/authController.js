@@ -16,14 +16,6 @@ export const googleLogin = async (req, res) => {
         const payload = ticket.getPayload()
 
         let user = await User.findOne({ email: payload.email})
-        // if (!user){
-        //     user = await User.create({
-        //         googleId: payload.sub,
-        //         email: payload.email,
-        //         name: payload.name,
-        //         picture: payload.picture,
-        //     })
-        // }
         if (!user){
             return res.status(403).json({success:false, message: "Your email is not registered. Please contact your admin."});
         } else if (user.status !== "invited" && user.status !== 'active'){
@@ -31,7 +23,6 @@ export const googleLogin = async (req, res) => {
         }
 
         user.googleId = payload.sub; // payload.sub is the unique-identifier for a user
-        // user.name = payload.name;
         // if (payload.picture){
         //     user.picture = payload.picture;
         // }
@@ -43,7 +34,7 @@ export const googleLogin = async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, email: user.email, role: user.role},
             process.env.JWT_SECRET,
-            { 
+            {
                 expiresIn: '7d'
             }
         )

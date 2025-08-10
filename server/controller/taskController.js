@@ -125,12 +125,6 @@ export const uploadProof = async (req, res) => {
                 }
             }
         }
-        /* if (task.proofUrl){
-            const oldPath = path.join(process.cwd(), task.proofUrl);
-            fs.unlink(oldPath, err => {
-                // Ignore error if file doesn't exist
-            });
-        } */
         if (!req.file) {
             return res.status(400).json({ success: false, message: "No file uploaded" });
         }
@@ -166,8 +160,6 @@ export const removeProof = async (req, res) => {
             return res.status(404).json({ success: false, message: "Task not found" })
         }
         if (task.proofUrl && task.proofUrl.includes('cloudinary.com')) {
-            // const oldPath = path.join(process.cwd(), task.proofUrl);
-            // fs.unlink(oldPath, err => {});
             const publicId = getCloudinaryPublicId(task.proofUrl);
             if (publicId) {
                 try {

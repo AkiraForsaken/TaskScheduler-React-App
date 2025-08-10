@@ -5,8 +5,7 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' 
-                            // ? import.meta.env.VITE_BACKEND_URL
-                            ? "https://task-scheduler-backend.vercel.app"
+                            ? import.meta.env.VITE_BACKEND_URL
                             : "http://localhost:5000";
 
 export const AppContext = createContext();
@@ -30,18 +29,15 @@ export const AppContextProvider = ({children})=>{
             if (res.data.success){
                 setUser(res.data.user);
                 setIsAdmin(res.data.user.role === 'admin');
-                // console.log("Success fetch");
-                // toast.success("Logged in"); // being called twice and development because of StrictMode 
             } else {
                 setUser(null);
                 setIsAdmin(false);
-                // toast.error(res.data.message);
+                console.error("Response failure in fetchUser: ", res.data.message);
             }
         } catch (error) {
             setUser(null);
             setIsAdmin(false);
-            toast.error(error.message);
-            // console.log(error.message);
+            toast.error("Error in fetchUser: ", error.message);
         }
     }
 
@@ -50,12 +46,11 @@ export const AppContextProvider = ({children})=>{
             const res = await axios.get('/api/tasks/get');
             if (res.data.success){
                 setUserTasks(res.data.tasks);
-                // console.log("Tasks fetched", res.data.tasks);
             } else {
-                toast.error(res.data.message);
+                console.error("Response failure in fetchTasks: ", res.data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            toast.error("Error in fetchTasks: ", error.message);
         }
     }
 
@@ -64,12 +59,11 @@ export const AppContextProvider = ({children})=>{
             const res = await axios.get('/api/users/list');
             if (res.data.success){
                 setUserList(res.data.users);
-                // console.log(res.data.users);
             } else {
-                toast.error(res.data.message);
+                console.error("Response failure in fetchUserList: ", res.data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            toast.error("Error in fetchUserList: ",error.message);
         }
     }
 
@@ -94,10 +88,10 @@ export const AppContextProvider = ({children})=>{
                 setNotifications(res.data.notifications);
                 setUnreadCount(res.data.notifications.filter(n => !n.isRead).length);
             } else {
-                toast.error(res.data.message)
+                console.error("Response failure in fetchNotifications: ", res.data.message);
             }
         } catch (error) {
-            toast.error('Failed to fetch notifications:', error);
+            toast.error('Error in fetchNotifications:', error.message);
         }
     }
 

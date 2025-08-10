@@ -153,7 +153,6 @@ export const uploadPicture = async (req, res)=>{
         if (!req.file) {
             return res.status(400).json({ success: false, message: "No file uploaded" });
         }
-        // Implement uploading picture to cloudinary and saving the image to the user on mongoDB database here
         // Upload to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: 'profile_pictures',

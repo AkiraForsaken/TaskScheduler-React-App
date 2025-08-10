@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext.jsx'
 import { AppBar, Toolbar, Box, Avatar, Menu, MenuItem, IconButton, Typography, Button } from '@mui/material'
-// import { Brightness4Icon, Brightness7Icon } from '@mui/icons-material'
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { GoogleLogin } from '@react-oauth/google'
@@ -13,8 +12,6 @@ import NotificationMenu from './NotificationMenu.jsx';
 const Navbar = () => {
   const { axios, user, setUser, isAdmin, setIsAdmin, darkMode, setDarkMode } = useAppContext();
   const navigate = useNavigate();
-  // Dummy user for demonstration
-  // const user = { name: 'John Doe', email: 'john@example.com', picture: profileIcon };
 
   // Dropdown menu state
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,7 +38,6 @@ const Navbar = () => {
         toast.success(res.data.message);
         setUser(null);
         setIsAdmin(false);
-        // localStorage.removeItem('token');
         navigate('/');
       }
     } catch (error) {
@@ -63,10 +59,6 @@ const Navbar = () => {
           </NavLink>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}> 
-          {/* <Button href="https://study4.com" variant='text' 
-          sx={{ p: 1, maxWidth: 150, textAlign: 'center', fontWeight: 500, textTransform: 'none', color: 'mainBg.contrastText'}}> 
-            <span className='text-lg'>Do exercises here</span> 
-          </Button> */}
           {user && !isAdmin && <NotificationMenu />}
           {/* Dark mode button */}
           <IconButton sx={{ ml: 1 }} onClick={()=>setDarkMode(!darkMode)} color="inherit">
@@ -104,7 +96,6 @@ const Navbar = () => {
                 } catch (error) {
                   toast.error(error.response?.data?.message || 'Login failed')
                 }
-                // setUser({ name: 'John Doe', email: 'john@example.com', picture: profileIcon });
               }}
               onError={() => {toast.error('Google login failed')
               }}
@@ -114,7 +105,6 @@ const Navbar = () => {
             <>
               <IconButton onClick={handleMenu} size="medium" sx={{ ml: 1 }}>
                 <Avatar 
-                  // src={user.picture ? `${import.meta.env.VITE_BACKEND_URL}${user.picture}` : profileIcon} 
                   src={user.picture ? user.picture : profileIcon}
                   alt={user.name} 
                   sx={{ width: 36, height: 36, mr: 2 }} 

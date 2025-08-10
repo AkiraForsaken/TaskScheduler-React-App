@@ -6,15 +6,14 @@ import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListIt
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import GroupIcon from '@mui/icons-material/Group'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import LogoutIcon from '@mui/icons-material/Logout'
 
 const sidebarLinks = [
-  { name: 'Manage Tasks', path: '/admin', icon: <AssignmentIcon /> },
+  { name: 'Add Tasks', path: '/admin', icon: <AssignmentIcon /> },
   { name: 'Verify Tasks', path: '/admin/verify', icon: <CheckCircleIcon /> },
-  { name: 'User Management', path: '/admin/add-users', icon: <GroupIcon /> }, // Placeholder
+  { name: 'Add New User', path: '/admin/add-users', icon: <GroupIcon /> }, // Placeholder
 ]
 
 const drawerWidth = 220
@@ -30,7 +29,6 @@ const Admin = () => {
         toast.success(res.data.message);
         setUser(null);
         setIsAdmin(false);
-        // localStorage.removeItem('token');
         navigate('/');
       }
     } catch (error) {
@@ -60,8 +58,6 @@ const Admin = () => {
                 to={item.path}
                 end={item.path === '/admin'}
                 sx={({ isActive }) => ({
-                  // bgcolor: isActive ? 'primary.light' : 'inherit',
-                  // color: isActive ? 'primary.main' : 'inherit',
                   borderRight: isActive ? '4px solid #1976d2' : '4px solid #fff',
                   '&:hover': { bgcolor: ` ${darkMode ? '#213f77ff' : '#a9bfd1ff'}` },
                 })}

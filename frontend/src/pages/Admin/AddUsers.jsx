@@ -38,7 +38,6 @@ const AddUsers = () => {
           if (!value) return true; // Skip validation if empty/null
           return /^[+]?[\d\s\-\(\)]+$/.test(value);
         }),
-      // .matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
     birthDate: Yup.date()
       .nullable()
       .transform((val, orig) => (orig === '' ? null : val))
@@ -49,7 +48,6 @@ const AddUsers = () => {
         today.setHours(0, 0, 0, 0);
         return value <= today;
       }),
-      // .max(new Date(), 'Birth date cannot be in the future'),
   });
 
   const validateForm = async () => {
