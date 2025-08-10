@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Grid, Card, CardContent, Typography, Dialog, DialogTitle, DialogContent, Button, List, ListItem, ListItemText, Box, IconButton, Collapse } from '@mui/material'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
@@ -68,6 +69,7 @@ function groupTasksByWeek(tasks, weekDates) {
 
 const Dashboard = () => {
   const { userTasks, axios, darkMode, fetchTasks } = useAppContext(); 
+  const location = useLocation();
   // Week navigation state
   const [weekOffset, setWeekOffset] = useState(0)
   const today = new Date()
@@ -79,6 +81,7 @@ const Dashboard = () => {
   // Dialog state for day card
   const [dayOpen, setDayOpen] = useState(false)
   const [selectedDayIdx, setSelectedDayIdx] = useState(null)
+  const [pendingOpenDate, setPendingOpenDate] = useState(null)
 
   // Proof dialog state
   const [proofOpen, setProofOpen] = useState(false)
@@ -209,6 +212,33 @@ const Dashboard = () => {
     d1.getDate() === d2.getDate()}
   const isInCurrentWeek = (date) => weekDates.some(wd => isSameDay(wd, date))
   const isToday = (date) => isSameDay(date, today)
+
+  // If navigated with a target date, adjust the week and queue opening the day dialog
+  useEffect(() => {
+    const targetDateFromState = location.state && location.state.targetDate ? new Date(location.state.targetDate) : null;
+    if (targetDateFromState && !isNaN(targetDateFromState)) {
+      const startToday = getStartOfWeek(today);
+      const startTarget = getStartOfWeek(targetDateFromState);
+      const msPerDay = 24 * 60 * 60 * 1000;
+      const diffDays = Math.round((startTarget - startToday) / msPerDay);
+      const offsetWeeks = Math.round(diffDays / 7);
+      setWeekOffset(offsetWeeks);
+      setPendingOpenDate(targetDateFromState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state?.openAt])
+
+  // Once weekDates reflect the target week, open the dialog on the correct day
+  useEffect(() => {
+    if (pendingOpenDate) {
+      const idxInWeek = weekDates.findIndex(date => isSameDay(date, pendingOpenDate));
+      if (idxInWeek !== -1) {
+        setSelectedDayIdx(idxInWeek);
+        setDayOpen(true);
+        setPendingOpenDate(null);
+      }
+    }
+  }, [weekDates, pendingOpenDate])
 
   useEffect(()=>{
     if (proofChanged){

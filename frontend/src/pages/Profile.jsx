@@ -7,7 +7,7 @@ import { useAppContext } from '../context/AppContext'
 import toast from 'react-hot-toast';
 
 const Profile = () => {
-  const { axios, user, setUser, userTasks } = useAppContext();
+  const { axios, user, setUser, userTasks, navigate } = useAppContext();
   const [editMode,setEditMode] = useState(false);
   const [name, setName]= useState(user?.name || '');
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || '');
@@ -66,27 +66,46 @@ const Profile = () => {
 
   // handle add / remove new link to social links
   const handleAddLink = () => {
-    const newLinks = [];
-    
-    // Add each non-empty social media link
-    Object.entries(socialMediaLinks).forEach(([platform, url]) => {
-      if (url.trim()) {
-        newLinks.push({
-          label: platform.charAt(0).toUpperCase() + platform.slice(1),
-          url: url.trim()
-        });
+    // Collect platforms being updated (non-empty inputs)
+    const entriesToUpsert = Object.entries(socialMediaLinks)
+      .filter(([, url]) => url && url.trim())
+      .map(([platform, url]) => ({
+        platform,
+        label: platform.charAt(0).toUpperCase() + platform.slice(1),
+        url: url.trim()
+      }));
+
+    if (entriesToUpsert.length === 0) return;
+
+    // Remove any existing links for the platforms being updated
+    const platformsBeingUpdated = new Set(entriesToUpsert.map(e => e.platform));
+    const filteredExisting = socialLinks.filter(
+      link => !platformsBeingUpdated.has(link.label.toLowerCase())
+    );
+
+    // Upsert updated links and enforce uniqueness by label (defensive)
+    const updated = [
+      ...filteredExisting,
+      ...entriesToUpsert.map(({ label, url }) => ({ label, url }))
+    ];
+
+    const uniqueByLabel = [];
+    const seen = new Set();
+    for (const link of updated) {
+      const key = link.label.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        uniqueByLabel.push(link);
       }
-    });
-    
-    if (newLinks.length > 0) {
-      setSocialLinks([...socialLinks, ...newLinks]);
-      setSocialMediaLinks({
-        facebook: '',
-        instagram: '',
-        tiktok: '',
-        twitter: ''
-      });
     }
+
+    setSocialLinks(uniqueByLabel);
+    setSocialMediaLinks({
+      facebook: '',
+      instagram: '',
+      tiktok: '',
+      twitter: ''
+    });
   }
 
   const handleRemoveLink = (idx) => {
@@ -263,7 +282,7 @@ const Profile = () => {
                         size="small"
                         placeholder="https://x.com/yourprofile"
                       />
-                      <Button 
+                      {/* <Button 
                        variant="contained" 
                        size="medium" 
                        sx={{p: 1, borderRadius: 10}}
@@ -272,7 +291,7 @@ const Profile = () => {
                        disabled={!Object.values(socialMediaLinks).some(url => url.trim())}
                       >
                         Add Social Links
-                      </Button>
+                      </Button> */}
                     </Box>
                  )}
               </Box>
@@ -280,7 +299,10 @@ const Profile = () => {
                 {editMode ? (
                   <>
                     <Button 
-                    onClick={handleSave} variant="contained" size="small" startIcon={<SaveIcon />} 
+                    onClick={ () => {
+                      handleAddLink();
+                      handleSave();
+                    }} variant="contained" size="small" startIcon={<SaveIcon />} 
                     sx={{ mr: 1 }}
                     >
                       Save
@@ -326,6 +348,15 @@ const Profile = () => {
                     <span className='text-md block'>Status: {task.status}</span>
                     <span className='text-md block'>Deadline: {new Date(task.deadline).toLocaleDateString()}</span>
                     <span className='text-md block'>Category: {task.category}</span>
+                    <Button variant='contained' size='small'
+                    sx={{ m: 1 }}
+                    onClick={()=>{
+                      // If notification is about a task and has relatedTask deadline, navigate with target date
+                      const targetDate = task.deadline;
+                      navigate('/dashboard', { state: { targetDate, openAt: Date.now() } });
+                    }}> 
+                      Move to task
+                    </Button>
                   </div>
                 </Grid>
               ))}

@@ -4,7 +4,7 @@ import Notification from '../models/Notification.js'
 export const getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({ userId: req.userId })
-          .populate('relatedTask', 'name').sort({ createdAt: -1 });
+          .populate('relatedTask', 'name deadline').sort({ createdAt: -1 });
     res.json({ success: true, notifications });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error in getNotifications' });

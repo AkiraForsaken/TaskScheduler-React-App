@@ -47,7 +47,7 @@ const Home = () => {
       <Button variant="contained" color="primary" size="large" 
       disabled={!user} onClick={()=>navigate('dashboard')} sx={{p: 2, borderRadius: 5}}
       >
-        Get Started
+        {!user ? "Log in to get started" : "Move to dashboard"}
       </Button>
     </Box>
   )

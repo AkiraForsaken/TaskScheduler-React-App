@@ -5,7 +5,7 @@ import { useAppContext } from '../context/AppContext';
 import toast from 'react-hot-toast';
 
 const NotificationMenu = () => {
-  const { notifications, unreadCount, axios, fetchNotifications} = useAppContext();
+  const { notifications, unreadCount, axios, fetchNotifications, navigate} = useAppContext();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   
@@ -81,18 +81,25 @@ const NotificationMenu = () => {
                 borderBottom: 1,
                 borderColor: 'divider'
               }}>
-                <div>
+                <div onClick={()=>{
+                  // If notification is about a task and has relatedTask deadline, navigate with target date
+                  const targetDate = noti.relatedTask?.deadline || noti.createdAt;
+                  navigate('/dashboard', { state: { targetDate, openAt: Date.now() } });
+                }}>
                   <Typography variant="body1">
                     {noti.title}
                   </Typography>
                   <Typography variant="body2" color="text.primary">
-                    {noti.message}
+                    {noti.message} 
                   </Typography>
                   <Typography variant="caption" color="text.primary" 
                   sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     {new Date(noti.createdAt).toLocaleDateString()}
                     <Button size='small' 
-                    onClick={()=> handleMarkAsRead(noti._id)} disabled={noti.isRead}
+                    onClick={(e)=> { 
+                      e.stopPropagation(); 
+                      handleMarkAsRead(noti._id) 
+                    }} disabled={noti.isRead}
                     sx={{ color: 'mainBg.whiteText' }}>
                       Mark as read
                     </Button>
