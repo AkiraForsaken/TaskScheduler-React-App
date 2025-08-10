@@ -31,25 +31,23 @@ const AddUsers = () => {
       .oneOf(roles, 'Please select a valid role')
       .required('Role is required'),
     phoneNumber: Yup.string()
-      .nullable()
-      .transform((val, originalVal) => (originalVal === '' ? null : val))
-      .when('phoneNumber', {
-        is: (v) => v != null && v !== '',
-        then: (schema) =>
-          schema.matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
-        otherwise: (schema) => schema, // allow null/empty without error
-      }),
+      .nullable().test(
+        'is-valid-phone',
+        'Please enter a valid phone number',
+        (value) => {
+          if (!value) return true; // Skip validation if empty/null
+          return /^[+]?[\d\s\-\(\)]+$/.test(value);
+        }),
       // .matches(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
     birthDate: Yup.date()
       .nullable()
-      .transform((val, originalVal) => (originalVal === '' ? null : val))
-      .when('birthDate', {
-        is: (v) => v != null && v !== '',
-        then: (schema) =>
-          schema
-            .typeError('Please enter a valid date')
-            .max(new Date(), 'Birth date cannot be in the future'),
-        otherwise: (schema) => schema, // allow null/empty without error
+      .transform((val, orig) => (orig === '' ? null : val))
+      .typeError('Please enter a valid date') // non-empty but unparsable
+      .test('not-in-future', 'Birth date cannot be in the future', (value) => {
+        if (value == null) return true; // optional
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return value <= today;
       }),
       // .max(new Date(), 'Birth date cannot be in the future'),
   });
@@ -151,7 +149,7 @@ const AddUsers = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target || null;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -200,7 +198,7 @@ const AddUsers = () => {
             <TextField
               label='Phone Number'
               name="phoneNumber"
-              value={formData.phoneNumber ?? ''}
+              value={formData.phoneNumber}
               onChange={handleChange}
               fullWidth
               margin='normal'
@@ -210,7 +208,7 @@ const AddUsers = () => {
             <TextField
               label='Birth Date'
               name="birthDate"
-              value={formData.birthDate ?? ''}
+              value={formData.birthDate}
               onChange={handleChange}
               fullWidth
               margin='normal'
