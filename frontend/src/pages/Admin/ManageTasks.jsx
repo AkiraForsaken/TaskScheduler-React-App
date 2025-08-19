@@ -11,6 +11,7 @@ const categories = ['Reading', 'Listening', 'Writing', 'Speaking', 'Other']
 const ManageTasks = () => {
   // Form state
   const { axios, userList } = useAppContext();
+  const [loading, setLoading] = useState(false);
   const [taskName, setTaskName] = useState('');
   const [instructions, setInstructions] = useState('');
   const [deadline, setDeadline] = useState(new Date());
@@ -20,6 +21,7 @@ const ManageTasks = () => {
   // DUMMY: Handle submit  (Note: No longer dummy)
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await axios.post('/api/tasks/add', {
         name: taskName, instructions, deadline, category, assignedTo
@@ -37,6 +39,7 @@ const ManageTasks = () => {
     setDeadline(new Date())
     setCategory('')
     setAssignedTo('')
+    setLoading(false);
   }
 
   return (
@@ -100,7 +103,7 @@ const ManageTasks = () => {
             </Select>
           </FormControl>
           <Box mt={2}>
-            <Button type="submit" variant="contained" sx={{p: 1}} fullWidth>
+            <Button type="submit" variant="contained" sx={{p: 1}} disabled={loading} fullWidth>
               <span className='text-lg'>Create Task</span>
             </Button>
           </Box>
