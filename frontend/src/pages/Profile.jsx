@@ -144,18 +144,32 @@ const Profile = () => {
         minHeight: '100vh',
         pt: { xs: 2, md: 4 },
         pb: 20,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
       }}
     >
       <Box sx={{ 
         display: 'flex', 
-        flexDirection: {xs: 'column', md: 'row'}, 
-        alignItems: 'start',
-        gap: 4, mx: 'auto', 
-        maxWidth: 1400, mt: 4 }}>
+        flexDirection: { xs: 'column', md: 'row'}, 
+        alignItems: { xs: 'center', md: 'flex-start' },
+        gap: { xs: 2, md: 4 },  
+        mx: 'auto', 
+        maxWidth: 1400, mt: 4, width: '100%', 
+        }}
+      >
 
         {/* -------------------- Left: Profile info -------------------- */}
-        <Card 
-        sx={{ flex: 1, minWidth: 300, maxWidth: 400, minHeight: 600, bgcolor: 'card.main', color: 'card.contrastText'}}>
+        <Card sx={{ 
+          flex: 1, 
+          minWidth: { xs: '90vw', md: 300 }, 
+          maxWidth: { xs: '100vw', md: 400 },  
+          minHeight: 400, 
+          bgcolor: 'card.main', 
+          color: 'card.contrastText', 
+          mx: { xs: 'auto', md: 0 },
+          mb: { xs: 2, md: 0 }
+          }}>
           <CardContent>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
               <Avatar 
@@ -331,19 +345,30 @@ const Profile = () => {
         </Card>
 
         {/* -------------------- Right: Tasks -------------------- */}
-        <Card sx={{flex: 2, minHeight:600, bgcolor: 'card.main', color: 'card.contrastText'}}>
+        <Card sx={{
+          flex: 2, 
+          minHeight: 400, 
+          bgcolor: 'card.main', 
+          color: 'card.contrastText', 
+          width: { xs: '100vw', md: 'auto' },
+          mx: { xs: 'auto', md: 0 },
+          boxSizing: 'border-box',
+          }}>
           <CardContent>
             <Typography variant="h4" fontWeight={700} fontFamily={"Montserrat"} mb={4} sx={{textAlign: 'center'}}>
               Your Tasks
             </Typography>
 
-            <Grid container spacing={10} sx={{ justifyContent: { xs: 'center', md: 'flex-start'}}}>
+            <Grid container spacing={10} sx={{ 
+              justifyContent: { xs: 'center', md: 'flex-start'}
+              }}
+            >
               {userTasks.length === 0 && <Typography>No tasks assigned.</Typography>}
               {userTasks.map(task => (
                 <Grid key={task._id}
-                size={{xs: 12, lg: 6}} 
-                sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <div>
+                size={{xs: 12, sm: 6, md: 4}} 
+                sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                  <div className='max-w-[100%] p-2 text-center'>
                     <span className='text-2xl font-bold block'>{task.name}</span>
                     <span className='text-md block'>Status: {task.status}</span>
                     <span className='text-md block'>Deadline: {new Date(task.deadline).toLocaleDateString()}</span>

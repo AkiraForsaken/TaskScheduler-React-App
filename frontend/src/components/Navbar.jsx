@@ -47,13 +47,31 @@ const Navbar = () => {
 
   return (
     <AppBar position="sticky" elevation={1} 
-    sx={{ bgcolor: 'mainBg.white', fontFamily: 'Montserrat, sans-serif', color: 'mainBg.contrastText' }}>
-      <Toolbar sx={{ justifyContent: 'space-between', maxHeight: 64}}>
+    sx={{ 
+      bgcolor: 'mainBg.white', 
+      fontFamily: 'Montserrat, sans-serif', 
+      color: 'mainBg.contrastText',
+      width: '100vw',
+      left: 0,
+      right: 0, }}>
+      <Toolbar sx={{ 
+        justifyContent: 'space-between', 
+        maxHeight: 64,
+        px: { xs: 1, sm: 4 }, // Responsive horizontal padding
+        minHeight: { xs: 56, sm: 64 }}}>
         <Box
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' , gap: 2, p: 4}}>
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between' , 
+          gap: 2, 
+          p: {xs: 1, sm: 4},
+          }}>
           <NavLink to='/' style={{ textDecoration: 'none' }}>
             <Typography variant='h4' fontWeight={700}
-            sx={{textAlign: 'center' }}>
+            sx={{
+              textAlign: 'center',
+              fontSize: {xs: 22, sm: 32}, }}>
               Home
             </Typography>
           </NavLink>
