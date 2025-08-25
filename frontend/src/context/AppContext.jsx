@@ -4,9 +4,10 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.NODE_ENV === 'production' 
-                            ? import.meta.env.VITE_BACKEND_URL
-                            : "http://localhost:5000";
+// axios.defaults.baseURL = process.env.NODE_ENV === 'production' 
+//                             ? import.meta.env.VITE_BACKEND_URL
+//                             : "http://localhost:5000";
+axios.defaults.baseURL = "";
 
 export const AppContext = createContext();
 
